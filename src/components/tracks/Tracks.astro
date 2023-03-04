@@ -1,0 +1,43 @@
+---
+import TrackCard from "./TrackCard.astro";
+---
+
+<div class="w-full flex justify-center flex-col items-center">
+  <h2
+    class="text-5xl font-headline font-semibold text-center text-green-900 opacity-80"
+  >
+    Trekking areas
+  </h2>
+  <!-- <div class="pt-1 text-xl text-justify text-gray-700">
+    <p class="text-left pt-1">
+      We provide equipment and accommodation on the tracks. Everything you need
+      is ng you need is
+    </p>
+    <p class="text-left pt-1">
+      We provide equipment and accomcks. Everything you need is
+    </p>
+  </div> -->
+
+  <!-- tracks -->
+  <!--  -->
+  <div class="grid xl:grid-cols-3 grid-cols-1 gap-8 mt-4 w-full">
+    <TrackCard
+      description="Towards the Adriatic sea, trails run through the sunny hills of Brda and Karst, known for their wine."
+      imageAlt="Brda"
+      imageUrl="/brda.jpg"
+      title="Brda"
+    />
+    <TrackCard
+      description="Last mountin ridge of the Alps, running along the Soča river, offers views far out into the neighbouring ladnscapes."
+      imageAlt="The Soča valley"
+      imageUrl="/soska.jpg"
+      title="The Soča valley"
+    />
+    <TrackCard
+      description="Mountains sorounded with forests and overflown with clear cold strams hide many trails. Each leading from one beautiy of nater to another."
+      imageAlt="The alps"
+      imageUrl="/alpe.jpg"
+      title="The alps"
+    />
+  </div>
+</div>
