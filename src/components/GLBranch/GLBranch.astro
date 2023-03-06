@@ -1,36 +1,41 @@
 ---
 import vertexSource from "./vertex.vs?raw";
 import fragmentSource from "./fragment.fs?raw";
+
+const seed = 123456789;
 ---
 
-<canvas width="300" height="300" id="my_branch"></canvas>
+<!-- https://webgl2fundamentals.org/webgl/lessons/webgl-drawing-without-data.html -->
+<canvas width="1000" height="1000" id="my_branch"></canvas>
 
-<script define:vars={{ vertexSource, fragmentSource }}>
+<script define:vars={{ vertexSource, fragmentSource, seed }}>
+  const N_VERTS = 10000;
+
   /* Step1: Prepare the canvas and get WebGL context */
-
   var canvas = document.getElementById("my_branch");
   // @ts-ignore
   var gl = canvas.getContext("webgl2");
+  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-  /* Step2: Define the geometry and store it in buffer objects */
+  // /* Step2: Define the geometry and store it in buffer objects */
 
-  var controll_points = [-0.8, 0.5, -0.5, -0.5, 1.0, -0.5];
+  // var controll_points = [-0.8, 0.5, -0.5, -0.5, 1.0, -0.5];
 
-  // Create a new buffer object
-  var controll_point_buffer = gl.createBuffer();
+  // // Create a new buffer object
+  // var controll_point_buffer = gl.createBuffer();
 
-  // Bind an empty array buffer to it
-  gl.bindBuffer(gl.ARRAY_BUFFER, controll_point_buffer);
+  // // Bind an empty array buffer to it
+  // gl.bindBuffer(gl.ARRAY_BUFFER, controll_point_buffer);
 
-  // Pass the vertices data to the buffer
-  gl.bufferData(
-    gl.ARRAY_BUFFER,
-    new Float32Array(controll_points),
-    gl.STATIC_DRAW
-  );
+  // // Pass the vertices data to the buffer
+  // gl.bufferData(
+  //   gl.ARRAY_BUFFER,
+  //   new Float32Array(controll_points),
+  //   gl.STATIC_DRAW
+  // );
 
-  // Unbind the buffer
-  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  // // Unbind the buffer
+  // gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
   // Create a shader program object to store combined shader program
   var shaderProgram = gl.createProgram();
@@ -59,26 +64,47 @@ import fragmentSource from "./fragment.fs?raw";
   // Link both programs
   gl.linkProgram(shaderProgram);
 
+  const numVertsLoc = gl.getUniformLocation(shaderProgram, "numVerts");
+  const resolutionLoc = gl.getUniformLocation(shaderProgram, "resolution");
+  const numCps = gl.getUniformLocation(shaderProgram, "numCps");
+  const controllPointLoc = gl.getUniformLocation(
+    shaderProgram,
+    "controllPoint"
+  );
+
   // Use the combined shader program object
   gl.useProgram(shaderProgram);
 
-  /* Step 4: Associate the shader programs to buffer objects */
-  //Bind vertex buffer object
-  gl.bindBuffer(gl.ARRAY_BUFFER, controll_point_buffer);
+  // tell the shader the number of verts
+  gl.uniform1i(numVertsLoc, N_VERTS);
+  // tell the shader the resolution
+  gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
+  // controllPoints [x0, y0, x1, y1, ...]
+  let points = [0.0, 0.0, 2.0, 4.0, 5.0, 0.0, 7.0, 4.0];
+  const scale = 0.12;
+  for (let i = 0; i < points.length; i++) {
+    points[i] *= scale;
+  }
+  gl.uniform2fv(controllPointLoc, points);
+  gl.uniform1i(numCps, points.length / 2);
 
-  //Get the attribute location
-  var coord = gl.getAttribLocation(shaderProgram, "coordinates");
+  // /* Step 4: Associate the shader programs to buffer objects */
+  // //Bind vertex buffer object
+  // gl.bindBuffer(gl.ARRAY_BUFFER, controll_point_buffer);
 
-  //point an attribute to the currently bound VBO
-  gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
+  // //Get the attribute location
+  // var coord = gl.getAttribLocation(shaderProgram, "coordinates");
 
-  //Enable the attribute
-  gl.enableVertexAttribArray(coord);
+  // //point an attribute to the currently bound VBO
+  // gl.vertexAttribPointer(coord, 2, gl.FLOAT, false, 0, 0);
+
+  // //Enable the attribute
+  // gl.enableVertexAttribArray(coord);
 
   /* Step5: Drawing the required object (triangle) */
 
   // Clear the canvas
-  gl.clearColor(1, 1, 1, 1);
+  gl.clearColor(0, 0, 0, 0);
 
   // // Enable the depth test
   // gl.enable(gl.DEPTH_TEST);
@@ -88,8 +114,8 @@ import fragmentSource from "./fragment.fs?raw";
 
   // Set the view port
   gl.viewport(0, 0, canvas.width, canvas.height);
-
+  gl.lineWidth(5.0);
   // Draw the triangle
-  gl.drawArrays(gl.LINE_LOOP, 0, 3);
-  // gl.drawArrays(gl.LINE_LOOP, 0, 3);
+  // gl.drawArrays(gl.LINES, 0, N_VERTS);
+  gl.drawArrays(gl.POINTS, 0, N_VERTS);
 </script>
