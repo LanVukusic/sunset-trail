@@ -83,7 +83,7 @@ def create_brach(start: Point, maxLen: float, direction: Point, depth=1, width=0
             new_direction = (prev_direction * 0.2 + new_direction * 0.8).normalize()
 
             # calculate point
-            new_point = prev_point + new_direction * (float(remainingLen) * 8.0)
+            new_point = prev_point + new_direction * (8.0)
             # plot point with a circle
             plt.plot(new_point.x, new_point.y, "o", color="orange", markersize=7)
 
@@ -100,7 +100,7 @@ def create_brach(start: Point, maxLen: float, direction: Point, depth=1, width=0
         # line width based on provided width, decreasing with i
         width = width - 0.1
         # mybe branch
-        if i > 2 and remainingLen > 10 and depth < 3 and False:
+        if i > 2 and remainingLen > 10 and depth < 3:
             if BRANCHING_PROBABILITY / (math.log(depth + 0.5) * 2) > random.random():
                 branching_dir = lerpPoint(
                     NEW_BRANCH_DIRECTION_LOW,

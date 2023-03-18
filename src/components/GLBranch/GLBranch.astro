@@ -62,7 +62,7 @@ const seed = 123456789;
   gl.attachShader(shaderProgram, fragShader);
 
   // Link both programs
-  gl.linkProgram(shaderProgram);
+  glBackground.linkProgram(shaderProgram);
 
   const numVertsLoc = gl.getUniformLocation(shaderProgram, "numVerts");
   const resolutionLoc = gl.getUniformLocation(shaderProgram, "resolution");
@@ -80,10 +80,23 @@ const seed = 123456789;
   // tell the shader the resolution
   gl.uniform2f(resolutionLoc, gl.canvas.width, gl.canvas.height);
   // controllPoints [x0, y0, x1, y1, ...]
-  let points = [0.0, 0.0, 2.0, 4.0, 5.0, 0.0, 7.0, 4.0];
-  const scale = 0.12;
+  let points = [
+    48.27624023269484, -1.0010368779431946, 55.273846228556614,
+    -4.8783439752311155, 63.25880121684956, -5.368745682952047,
+    71.24375620514252, -5.859147390672978, 71.24375620514252,
+    -5.859147390672978, 79.21315764715064, -5.160119024925921,
+    86.85775557761225, -7.518110221173699, 93.20382934575153,
+    -12.389182765217218, 93.20382934575153, -12.389182765217218,
+    99.5499031138908, -17.260255309260735, 106.4817373184303,
+    -21.25395967498139, 113.87805755482952, -24.302639218756283,
+    113.87805755482952, -24.302639218756283, 121.13766311960526,
+    -20.9413705529283,
+  ];
+  const scale = 0.03;
   for (let i = 0; i < points.length; i++) {
-    points[i] *= scale;
+    points[i] = points[i] * scale;
+    if (i % 2 == 0) points[i] = points[i] - 2.65;
+    else points[i] = points[i] + 0.0;
   }
   gl.uniform2fv(controllPointLoc, points);
   gl.uniform1i(numCps, points.length / 2);

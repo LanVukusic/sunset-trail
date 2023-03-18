@@ -56,11 +56,13 @@ uniform vec2 resolution;
 out vec4 color;
 
 void main(){
-  float u=float(numCps)*float(gl_VertexID)/float(numVerts);// goes from 0 to numCps
+  float t=float(gl_VertexID)/float(numVerts);// goes from 0 to 1
+  float u=float(numCps)*t;// goes from 0 to numCps
   float local_u=fract(u);// goes from 0 to 1
+  
   // 4 controll points define one line segment
   // last point in each line segment is used as the first point in the next line segment
-  int line_segment_index=int(floor(u)/4.);// goes from 0 to numCps/4
+  int line_segment_index=int(u);// goes from 0 to numCps/4
   float line_segment_u=fract(u/4.);// goes from 0.0 to 1.0 in one line segment (between 4 controll points)
   
   vec2 cp1=controllPoint[line_segment_index*4+0];
@@ -71,7 +73,12 @@ void main(){
   vec4 P0=toBezier(local_u,vec4(cp1,0.,1.),vec4(cp2,0.,1.),vec4(cp3,0.,1.),vec4(cp4,0.,1.));
   
   gl_Position=P0;
-  gl_PointSize=8.;
-  color=hslToRGB(local_u,1.,.5);
+  gl_PointSize=15.*(1.-t*2.);
+  // rainbow
+  color=hslToRGB(.35,1.,(t));
   
+  // if(gl_VertexID==10000-100){
+    //   gl_PointSize=50.;
+    //   color=vec4(0.,0.,0.,1.);
+  // }
 }
